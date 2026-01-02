@@ -9,180 +9,402 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local toggleUIButton = Instance.new("TextButton")
-toggleUIButton.Size = UDim2.new(0, 60, 0, 60)
-toggleUIButton.Position = UDim2.new(1, -70, 0, 10)
-toggleUIButton.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-toggleUIButton.BackgroundTransparency = 0.3
+toggleUIButton.Size = UDim2.new(0, 70, 0, 70)
+toggleUIButton.Position = UDim2.new(1, -85, 0, 15)
+toggleUIButton.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+toggleUIButton.BackgroundTransparency = 0.2
 toggleUIButton.BorderSizePixel = 0
-toggleUIButton.Text = "UI"
+toggleUIButton.Text = "🗑️"
 toggleUIButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleUIButton.Font = Enum.Font.GothamBold
-toggleUIButton.TextSize = 20
+toggleUIButton.TextSize = 32
 toggleUIButton.Parent = screenGui
 
 local toggleUICorner = Instance.new("UICorner")
-toggleUICorner.CornerRadius = UDim.new(0, 15)
+toggleUICorner.CornerRadius = UDim.new(0, 18)
 toggleUICorner.Parent = toggleUIButton
 
+local toggleUIStroke = Instance.new("UIStroke")
+toggleUIStroke.Color = Color3.fromRGB(100, 255, 150)
+toggleUIStroke.Thickness = 2.5
+toggleUIStroke.Parent = toggleUIButton
+
 local menuFrame = Instance.new("Frame")
-menuFrame.Size = UDim2.new(0, 320, 0, 220)
-menuFrame.Position = UDim2.new(0.5, -160, 0.5, -110)
-menuFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+menuFrame.Size = UDim2.new(0, 420, 0, 320)
+menuFrame.Position = UDim2.new(0.5, -210, 0.5, -160)
+menuFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
 menuFrame.BorderSizePixel = 0
+menuFrame.Visible = true
 menuFrame.Parent = screenGui
 
 local menuCorner = Instance.new("UICorner")
-menuCorner.CornerRadius = UDim.new(0, 15)
+menuCorner.CornerRadius = UDim.new(0, 20)
 menuCorner.Parent = menuFrame
 
+local menuStroke = Instance.new("UIStroke")
+menuStroke.Color = Color3.fromRGB(60, 60, 80)
+menuStroke.Thickness = 2
+menuStroke.Parent = menuFrame
+
+local menuGlow = Instance.new("ImageLabel")
+menuGlow.Size = UDim2.new(1, 40, 1, 40)
+menuGlow.Position = UDim2.new(0, -20, 0, -20)
+menuGlow.BackgroundTransparency = 1
+menuGlow.Image = "rbxasset://textures/ui/Glow.png"
+menuGlow.ImageColor3 = Color3.fromRGB(100, 255, 150)
+menuGlow.ImageTransparency = 0.8
+menuGlow.ScaleType = Enum.ScaleType.Slice
+menuGlow.SliceCenter = Rect.new(16, 16, 240, 240)
+menuGlow.Parent = menuFrame
+
 local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, -30, 0, 45)
-titleLabel.Position = UDim2.new(0, 15, 0, 15)
+titleLabel.Size = UDim2.new(1, -40, 0, 60)
+titleLabel.Position = UDim2.new(0, 20, 0, 20)
 titleLabel.BackgroundTransparency = 1
-titleLabel.Text = "🎮 Auto Collector"
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.Text = "🎮 AUTO COLLECTOR"
+titleLabel.TextColor3 = Color3.fromRGB(100, 255, 150)
 titleLabel.Font = Enum.Font.GothamBold
-titleLabel.TextSize = 20
-titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.TextSize = 26
+titleLabel.TextXAlignment = Enum.TextXAlignment.Center
 titleLabel.Parent = menuFrame
 
+local subtitleLabel = Instance.new("TextLabel")
+subtitleLabel.Size = UDim2.new(1, -40, 0, 30)
+subtitleLabel.Position = UDim2.new(0, 20, 0, 75)
+subtitleLabel.BackgroundTransparency = 1
+subtitleLabel.Text = "เลือกโหมดการเก็บขยะ"
+subtitleLabel.TextColor3 = Color3.fromRGB(150, 150, 170)
+subtitleLabel.Font = Enum.Font.Gotham
+subtitleLabel.TextSize = 15
+subtitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+subtitleLabel.Parent = menuFrame
+
 local walkButton = Instance.new("TextButton")
-walkButton.Size = UDim2.new(1, -30, 0, 55)
-walkButton.Position = UDim2.new(0, 15, 0, 75)
+walkButton.Size = UDim2.new(1, -40, 0, 75)
+walkButton.Position = UDim2.new(0, 20, 0, 125)
 walkButton.BackgroundColor3 = Color3.fromRGB(52, 152, 219)
 walkButton.BorderSizePixel = 0
-walkButton.Text = "🚶 เดินเก็บไอเทม"
-walkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-walkButton.Font = Enum.Font.GothamBold
-walkButton.TextSize = 16
+walkButton.Text = ""
 walkButton.Parent = menuFrame
 
 local walkCorner = Instance.new("UICorner")
-walkCorner.CornerRadius = UDim.new(0, 10)
+walkCorner.CornerRadius = UDim.new(0, 12)
 walkCorner.Parent = walkButton
 
+local walkGlow = Instance.new("ImageLabel")
+walkGlow.Size = UDim2.new(1, 20, 1, 20)
+walkGlow.Position = UDim2.new(0, -10, 0, -10)
+walkGlow.BackgroundTransparency = 1
+walkGlow.Image = "rbxasset://textures/ui/Glow.png"
+walkGlow.ImageColor3 = Color3.fromRGB(52, 152, 219)
+walkGlow.ImageTransparency = 0.9
+walkGlow.ScaleType = Enum.ScaleType.Slice
+walkGlow.SliceCenter = Rect.new(16, 16, 240, 240)
+walkGlow.Parent = walkButton
+
+local walkIcon = Instance.new("TextLabel")
+walkIcon.Size = UDim2.new(0, 50, 0, 50)
+walkIcon.Position = UDim2.new(0, 15, 0.5, -25)
+walkIcon.BackgroundTransparency = 1
+walkIcon.Text = "🚶"
+walkIcon.TextSize = 32
+walkIcon.Parent = walkButton
+
+local walkText = Instance.new("TextLabel")
+walkText.Size = UDim2.new(1, -80, 1, 0)
+walkText.Position = UDim2.new(0, 70, 0, 0)
+walkText.BackgroundTransparency = 1
+walkText.Text = "เดินเก็บไอเทม"
+walkText.TextColor3 = Color3.fromRGB(255, 255, 255)
+walkText.Font = Enum.Font.GothamBold
+walkText.TextSize = 20
+walkText.TextXAlignment = Enum.TextXAlignment.Left
+walkText.Parent = walkButton
+
+local walkDesc = Instance.new("TextLabel")
+walkDesc.Size = UDim2.new(1, -80, 0, 20)
+walkDesc.Position = UDim2.new(0, 70, 1, -25)
+walkDesc.BackgroundTransparency = 1
+walkDesc.Text = "โหมดปกติ ปลอดภัย"
+walkDesc.TextColor3 = Color3.fromRGB(200, 230, 255)
+walkDesc.Font = Enum.Font.Gotham
+walkDesc.TextSize = 13
+walkDesc.TextXAlignment = Enum.TextXAlignment.Left
+walkDesc.Parent = walkButton
+
 local teleportButton = Instance.new("TextButton")
-teleportButton.Size = UDim2.new(1, -30, 0, 55)
-teleportButton.Position = UDim2.new(0, 15, 0, 145)
+teleportButton.Size = UDim2.new(1, -40, 0, 75)
+teleportButton.Position = UDim2.new(0, 20, 0, 215)
 teleportButton.BackgroundColor3 = Color3.fromRGB(155, 89, 182)
 teleportButton.BorderSizePixel = 0
-teleportButton.Text = "⚡ วาปเก็บไอเทม (เร็ว)"
-teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-teleportButton.Font = Enum.Font.GothamBold
-teleportButton.TextSize = 16
+teleportButton.Text = ""
 teleportButton.Parent = menuFrame
 
 local teleportCorner = Instance.new("UICorner")
-teleportCorner.CornerRadius = UDim.new(0, 10)
+teleportCorner.CornerRadius = UDim.new(0, 12)
 teleportCorner.Parent = teleportButton
 
+local teleportGlow = Instance.new("ImageLabel")
+teleportGlow.Size = UDim2.new(1, 20, 1, 20)
+teleportGlow.Position = UDim2.new(0, -10, 0, -10)
+teleportGlow.BackgroundTransparency = 1
+teleportGlow.Image = "rbxasset://textures/ui/Glow.png"
+teleportGlow.ImageColor3 = Color3.fromRGB(155, 89, 182)
+teleportGlow.ImageTransparency = 0.9
+teleportGlow.ScaleType = Enum.ScaleType.Slice
+teleportGlow.SliceCenter = Rect.new(16, 16, 240, 240)
+teleportGlow.Parent = teleportButton
+
+local teleportIcon = Instance.new("TextLabel")
+teleportIcon.Size = UDim2.new(0, 50, 0, 50)
+teleportIcon.Position = UDim2.new(0, 15, 0.5, -25)
+teleportIcon.BackgroundTransparency = 1
+teleportIcon.Text = "⚡"
+teleportIcon.TextSize = 32
+teleportIcon.Parent = teleportButton
+
+local teleportText = Instance.new("TextLabel")
+teleportText.Size = UDim2.new(1, -80, 1, 0)
+teleportText.Position = UDim2.new(0, 70, 0, 0)
+teleportText.BackgroundTransparency = 1
+teleportText.Text = "วาปเก็บไอเทม"
+teleportText.TextColor3 = Color3.fromRGB(255, 255, 255)
+teleportText.Font = Enum.Font.GothamBold
+teleportText.TextSize = 20
+teleportText.TextXAlignment = Enum.TextXAlignment.Left
+teleportText.Parent = teleportButton
+
+local teleportDesc = Instance.new("TextLabel")
+teleportDesc.Size = UDim2.new(1, -80, 0, 20)
+teleportDesc.Position = UDim2.new(0, 70, 1, -25)
+teleportDesc.BackgroundTransparency = 1
+teleportDesc.Text = "ไวกว่าเดิน 100%"
+teleportDesc.TextColor3 = Color3.fromRGB(220, 200, 255)
+teleportDesc.Font = Enum.Font.Gotham
+teleportDesc.TextSize = 13
+teleportDesc.TextXAlignment = Enum.TextXAlignment.Left
+teleportDesc.Parent = teleportButton
+
 local statsFrame = Instance.new("Frame")
-statsFrame.Size = UDim2.new(0, 320, 0, 480)
-statsFrame.Position = UDim2.new(0.5, -160, 0.5, -240)
-statsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+statsFrame.Size = UDim2.new(0, 560, 0, 420)
+statsFrame.Position = UDim2.new(0.5, -280, 0.5, -210)
+statsFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 28)
 statsFrame.BorderSizePixel = 0
 statsFrame.Visible = false
 statsFrame.Parent = screenGui
 
 local statsCorner = Instance.new("UICorner")
-statsCorner.CornerRadius = UDim.new(0, 15)
+statsCorner.CornerRadius = UDim.new(0, 20)
 statsCorner.Parent = statsFrame
 
+local statsStroke = Instance.new("UIStroke")
+statsStroke.Color = Color3.fromRGB(60, 60, 80)
+statsStroke.Thickness = 2
+statsStroke.Parent = statsFrame
+
 local titleBar = Instance.new("Frame")
-titleBar.Size = UDim2.new(1, 0, 0, 50)
-titleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+titleBar.Size = UDim2.new(1, 0, 0, 55)
+titleBar.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 titleBar.BorderSizePixel = 0
 titleBar.Parent = statsFrame
 
 local titleBarCorner = Instance.new("UICorner")
-titleBarCorner.CornerRadius = UDim.new(0, 15)
+titleBarCorner.CornerRadius = UDim.new(0, 20)
 titleBarCorner.Parent = titleBar
 
 local statsTitle = Instance.new("TextLabel")
-statsTitle.Size = UDim2.new(1, -100, 1, 0)
-statsTitle.Position = UDim2.new(0, 15, 0, 0)
+statsTitle.Size = UDim2.new(1, -120, 1, 0)
+statsTitle.Position = UDim2.new(0, 20, 0, 0)
 statsTitle.BackgroundTransparency = 1
-statsTitle.Text = "📊 Auto Collector"
-statsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+statsTitle.Text = "📊 AUTO COLLECTOR"
+statsTitle.TextColor3 = Color3.fromRGB(100, 255, 150)
 statsTitle.Font = Enum.Font.GothamBold
-statsTitle.TextSize = 18
+statsTitle.TextSize = 20
 statsTitle.TextXAlignment = Enum.TextXAlignment.Left
 statsTitle.Parent = titleBar
 
-local toggleButton = Instance.new("TextButton")
-toggleButton.Size = UDim2.new(0, 35, 0, 35)
-toggleButton.Position = UDim2.new(1, -80, 0.5, -17.5)
-toggleButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
-toggleButton.BorderSizePixel = 0
-toggleButton.Text = "||"
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-toggleButton.Font = Enum.Font.GothamBold
-toggleButton.TextSize = 18
-toggleButton.Parent = titleBar
-
-local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 8)
-toggleCorner.Parent = toggleButton
-
 local closeButton = Instance.new("TextButton")
-closeButton.Size = UDim2.new(0, 35, 0, 35)
-closeButton.Position = UDim2.new(1, -40, 0.5, -17.5)
+closeButton.Size = UDim2.new(0, 40, 0, 40)
+closeButton.Position = UDim2.new(1, -50, 0.5, -20)
 closeButton.BackgroundColor3 = Color3.fromRGB(231, 76, 60)
 closeButton.BorderSizePixel = 0
 closeButton.Text = "X"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.Font = Enum.Font.GothamBold
-closeButton.TextSize = 20
+closeButton.TextSize = 22
 closeButton.Parent = titleBar
 
 local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.CornerRadius = UDim.new(0, 10)
 closeCorner.Parent = closeButton
 
 local statusLabel = Instance.new("TextLabel")
-statusLabel.Size = UDim2.new(1, -30, 0, 40)
-statusLabel.Position = UDim2.new(0, 15, 0, 60)
-statusLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+statusLabel.Size = UDim2.new(1, -20, 0, 35)
+statusLabel.Position = UDim2.new(0, 10, 0, 65)
+statusLabel.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 statusLabel.BorderSizePixel = 0
-statusLabel.Text = "🔄 กำลังเริ่มต้น..."
+statusLabel.Text = "⏸ รอการเริ่มงาน..."
 statusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 statusLabel.Font = Enum.Font.Gotham
-statusLabel.TextSize = 13
+statusLabel.TextSize = 14
 statusLabel.Parent = statsFrame
 
 local statusCorner = Instance.new("UICorner")
-statusCorner.CornerRadius = UDim.new(0, 8)
+statusCorner.CornerRadius = UDim.new(0, 10)
 statusCorner.Parent = statusLabel
 
-local statsContainer = Instance.new("ScrollingFrame")
-statsContainer.Size = UDim2.new(1, -30, 1, -115)
-statsContainer.Position = UDim2.new(0, 15, 0, 110)
-statsContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-statsContainer.BorderSizePixel = 0
-statsContainer.ScrollBarThickness = 6
-statsContainer.Parent = statsFrame
+local startButton = Instance.new("TextButton")
+startButton.Size = UDim2.new(1, -20, 0, 50)
+startButton.Position = UDim2.new(0, 10, 0, 110)
+startButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+startButton.BorderSizePixel = 0
+startButton.Text = ""
+startButton.Visible = true
+startButton.Parent = statsFrame
 
-local containerCorner = Instance.new("UICorner")
-containerCorner.CornerRadius = UDim.new(0, 8)
-containerCorner.Parent = statsContainer
+local startCorner = Instance.new("UICorner")
+startCorner.CornerRadius = UDim.new(0, 12)
+startCorner.Parent = startButton
 
-local listLayout = Instance.new("UIListLayout")
-listLayout.Padding = UDim.new(0, 8)
-listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-listLayout.Parent = statsContainer
+local startGlow = Instance.new("ImageLabel")
+startGlow.Size = UDim2.new(1, 30, 1, 30)
+startGlow.Position = UDim2.new(0, -15, 0, -15)
+startGlow.BackgroundTransparency = 1
+startGlow.Image = "rbxasset://textures/ui/Glow.png"
+startGlow.ImageColor3 = Color3.fromRGB(46, 204, 113)
+startGlow.ImageTransparency = 0.7
+startGlow.ScaleType = Enum.ScaleType.Slice
+startGlow.SliceCenter = Rect.new(16, 16, 240, 240)
+startGlow.Parent = startButton
 
-local availableHeader = Instance.new("TextLabel")
-availableHeader.Size = UDim2.new(1, -10, 0, 28)
-availableHeader.BackgroundTransparency = 1
-availableHeader.Text = "🔍 ขยะที่เจอในแมพ"
-availableHeader.TextColor3 = Color3.fromRGB(255, 200, 100)
-availableHeader.Font = Enum.Font.GothamBold
-availableHeader.TextSize = 14
-availableHeader.TextXAlignment = Enum.TextXAlignment.Left
-availableHeader.LayoutOrder = 0
-availableHeader.Parent = statsContainer
+local startIcon = Instance.new("TextLabel")
+startIcon.Size = UDim2.new(0, 40, 0, 40)
+startIcon.Position = UDim2.new(0, 15, 0.5, -20)
+startIcon.BackgroundTransparency = 1
+startIcon.Text = "▶"
+startIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+startIcon.Font = Enum.Font.GothamBold
+startIcon.TextSize = 28
+startIcon.Parent = startButton
 
-local function createStatLabel(name, emoji, order)
+local startText = Instance.new("TextLabel")
+startText.Size = UDim2.new(1, -70, 1, 0)
+startText.Position = UDim2.new(0, 60, 0, 0)
+startText.BackgroundTransparency = 1
+startText.Text = "เริ่มเก็บขยะอัตโนมัติ"
+startText.TextColor3 = Color3.fromRGB(255, 255, 255)
+startText.Font = Enum.Font.GothamBold
+startText.TextSize = 20
+startText.TextXAlignment = Enum.TextXAlignment.Left
+startText.Parent = startButton
+
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(1, -20, 0, 50)
+toggleButton.Position = UDim2.new(0, 10, 0, 110)
+toggleButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+toggleButton.BorderSizePixel = 0
+toggleButton.Text = ""
+toggleButton.Visible = false
+toggleButton.Parent = statsFrame
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 12)
+toggleCorner.Parent = toggleButton
+
+local toggleIcon = Instance.new("TextLabel")
+toggleIcon.Size = UDim2.new(0, 40, 0, 40)
+toggleIcon.Position = UDim2.new(0, 15, 0.5, -20)
+toggleIcon.BackgroundTransparency = 1
+toggleIcon.Text = "||"
+toggleIcon.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleIcon.Font = Enum.Font.GothamBold
+toggleIcon.TextSize = 28
+toggleIcon.Parent = toggleButton
+
+local toggleText = Instance.new("TextLabel")
+toggleText.Size = UDim2.new(1, -70, 1, 0)
+toggleText.Position = UDim2.new(0, 60, 0, 0)
+toggleText.BackgroundTransparency = 1
+toggleText.Text = "หยุดชั่วคราว"
+toggleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleText.Font = Enum.Font.GothamBold
+toggleText.TextSize = 20
+toggleText.TextXAlignment = Enum.TextXAlignment.Left
+toggleText.Parent = toggleButton
+
+local contentFrame = Instance.new("Frame")
+contentFrame.Size = UDim2.new(1, -20, 1, -175)
+contentFrame.Position = UDim2.new(0, 10, 0, 165)
+contentFrame.BackgroundTransparency = 1
+contentFrame.Parent = statsFrame
+
+local leftColumn = Instance.new("Frame")
+leftColumn.Size = UDim2.new(0.48, 0, 1, 0)
+leftColumn.Position = UDim2.new(0, 0, 0, 0)
+leftColumn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+leftColumn.BorderSizePixel = 0
+leftColumn.Parent = contentFrame
+
+local leftCorner = Instance.new("UICorner")
+leftCorner.CornerRadius = UDim.new(0, 12)
+leftCorner.Parent = leftColumn
+
+local leftScroll = Instance.new("ScrollingFrame")
+leftScroll.Size = UDim2.new(1, -10, 1, -45)
+leftScroll.Position = UDim2.new(0, 5, 0, 40)
+leftScroll.BackgroundTransparency = 1
+leftScroll.BorderSizePixel = 0
+leftScroll.ScrollBarThickness = 4
+leftScroll.Parent = leftColumn
+
+local leftLayout = Instance.new("UIListLayout")
+leftLayout.Padding = UDim.new(0, 6)
+leftLayout.SortOrder = Enum.SortOrder.LayoutOrder
+leftLayout.Parent = leftScroll
+
+local leftHeader = Instance.new("TextLabel")
+leftHeader.Size = UDim2.new(1, 0, 0, 35)
+leftHeader.BackgroundTransparency = 1
+leftHeader.Text = "🔍 ขยะในแมพ"
+leftHeader.TextColor3 = Color3.fromRGB(255, 200, 100)
+leftHeader.Font = Enum.Font.GothamBold
+leftHeader.TextSize = 16
+leftHeader.Parent = leftColumn
+
+local rightColumn = Instance.new("Frame")
+rightColumn.Size = UDim2.new(0.48, 0, 1, 0)
+rightColumn.Position = UDim2.new(0.52, 0, 0, 0)
+rightColumn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+rightColumn.BorderSizePixel = 0
+rightColumn.Parent = contentFrame
+
+local rightCorner = Instance.new("UICorner")
+rightCorner.CornerRadius = UDim.new(0, 12)
+rightCorner.Parent = rightColumn
+
+local rightScroll = Instance.new("ScrollingFrame")
+rightScroll.Size = UDim2.new(1, -10, 1, -45)
+rightScroll.Position = UDim2.new(0, 5, 0, 40)
+rightScroll.BackgroundTransparency = 1
+rightScroll.BorderSizePixel = 0
+rightScroll.ScrollBarThickness = 4
+rightScroll.Parent = rightColumn
+
+local rightLayout = Instance.new("UIListLayout")
+rightLayout.Padding = UDim.new(0, 6)
+rightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+rightLayout.Parent = rightScroll
+
+local rightHeader = Instance.new("TextLabel")
+rightHeader.Size = UDim2.new(1, 0, 0, 35)
+rightHeader.BackgroundTransparency = 1
+rightHeader.Text = "✅ เก็บแล้ว"
+rightHeader.TextColor3 = Color3.fromRGB(100, 255, 150)
+rightHeader.Font = Enum.Font.GothamBold
+rightHeader.TextSize = 16
+rightHeader.Parent = rightColumn
+
+local function createStatLabel(parent, name, emoji, order)
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(1, -10, 0, 28)
     label.BackgroundTransparency = 1
@@ -192,42 +414,31 @@ local function createStatLabel(name, emoji, order)
     label.TextSize = 13
     label.TextXAlignment = Enum.TextXAlignment.Left
     label.LayoutOrder = order
-    label.Parent = statsContainer
+    label.Parent = parent
     return label
 end
 
-local bottleAvailLabel = createStatLabel("Bottles พบ", "🍾", 1)
-local eggplantAvailLabel = createStatLabel("Eggplants พบ", "🍆", 2)
-local charcoalAvailLabel = createStatLabel("Charcoal พบ", "⚫", 3)
-local appleCoreAvailLabel = createStatLabel("Apple Cores พบ", "🍎", 4)
-local chipAvailLabel = createStatLabel("Chips พบ", "🍟", 5)
-local wrapperAvailLabel = createStatLabel("Wrappers พบ", "📄", 6)
-local milkAvailLabel = createStatLabel("Milk พบ", "🥛", 7)
-local batteryAvailLabel = createStatLabel("Batteries พบ", "🔋", 8)
-local totalAvailLabel = createStatLabel("รวมขยะทั้งหมด", "🗑", 9)
+local bottleAvailLabel = createStatLabel(leftScroll, "Bottles", "🍾", 1)
+local eggplantAvailLabel = createStatLabel(leftScroll, "Eggplants", "🍆", 2)
+local charcoalAvailLabel = createStatLabel(leftScroll, "Charcoal", "⚫", 3)
+local appleCoreAvailLabel = createStatLabel(leftScroll, "Apple Cores", "🍎", 4)
+local chipAvailLabel = createStatLabel(leftScroll, "Chips", "🍟", 5)
+local wrapperAvailLabel = createStatLabel(leftScroll, "Wrappers", "📄", 6)
+local milkAvailLabel = createStatLabel(leftScroll, "Milk", "🥛", 7)
+local batteryAvailLabel = createStatLabel(leftScroll, "Batteries", "🔋", 8)
+local totalAvailLabel = createStatLabel(leftScroll, "รวมทั้งหมด", "🗑", 9)
 totalAvailLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
 totalAvailLabel.Font = Enum.Font.GothamBold
 
-local collectedHeader = Instance.new("TextLabel")
-collectedHeader.Size = UDim2.new(1, -10, 0, 28)
-collectedHeader.BackgroundTransparency = 1
-collectedHeader.Text = "✅ ขยะที่เก็บแล้ว"
-collectedHeader.TextColor3 = Color3.fromRGB(100, 255, 150)
-collectedHeader.Font = Enum.Font.GothamBold
-collectedHeader.TextSize = 14
-collectedHeader.TextXAlignment = Enum.TextXAlignment.Left
-collectedHeader.LayoutOrder = 10
-collectedHeader.Parent = statsContainer
-
-local bottleLabel = createStatLabel("Bottles เก็บ", "🍾", 11)
-local eggplantLabel = createStatLabel("Eggplants เก็บ", "🍆", 12)
-local charcoalLabel = createStatLabel("Charcoal เก็บ", "⚫", 13)
-local appleCoreLabel = createStatLabel("Apple Cores เก็บ", "🍎", 14)
-local chipLabel = createStatLabel("Chips เก็บ", "🍟", 15)
-local wrapperLabel = createStatLabel("Wrappers เก็บ", "📄", 16)
-local milkLabel = createStatLabel("Milk เก็บ", "🥛", 17)
-local batteryLabel = createStatLabel("Batteries เก็บ", "🔋", 18)
-local totalLabel = createStatLabel("รวมที่เก็บ", "📦", 19)
+local bottleLabel = createStatLabel(rightScroll, "Bottles", "🍾", 1)
+local eggplantLabel = createStatLabel(rightScroll, "Eggplants", "🍆", 2)
+local charcoalLabel = createStatLabel(rightScroll, "Charcoal", "⚫", 3)
+local appleCoreLabel = createStatLabel(rightScroll, "Apple Cores", "🍎", 4)
+local chipLabel = createStatLabel(rightScroll, "Chips", "🍟", 5)
+local wrapperLabel = createStatLabel(rightScroll, "Wrappers", "📄", 6)
+local milkLabel = createStatLabel(rightScroll, "Milk", "🥛", 7)
+local batteryLabel = createStatLabel(rightScroll, "Batteries", "🔋", 8)
+local totalLabel = createStatLabel(rightScroll, "รวมที่เก็บ", "📦", 9)
 totalLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
 totalLabel.Font = Enum.Font.GothamBold
 
@@ -256,30 +467,33 @@ local availableStats = {
 local isRunning = false
 local isPaused = false
 local USE_TELEPORT = false
+local currentHeldItem = nil
+local currentTargetBin = nil
+local modeSelected = false
 
 local function updateStats()
-    bottleAvailLabel.Text = "🍾 Bottles พบ: " .. availableStats.bottles
-    eggplantAvailLabel.Text = "🍆 Eggplants พบ: " .. availableStats.eggplants
-    charcoalAvailLabel.Text = "⚫ Charcoal พบ: " .. availableStats.charcoal
-    appleCoreAvailLabel.Text = "🍎 Apple Cores พบ: " .. availableStats.appleCores
-    chipAvailLabel.Text = "🍟 Chips พบ: " .. availableStats.chips
-    wrapperAvailLabel.Text = "📄 Wrappers พบ: " .. availableStats.wrappers
-    milkAvailLabel.Text = "🥛 Milk พบ: " .. availableStats.milk
-    batteryAvailLabel.Text = "🔋 Batteries พบ: " .. availableStats.batteries
+    bottleAvailLabel.Text = "🍾 Bottles: " .. availableStats.bottles
+    eggplantAvailLabel.Text = "🍆 Eggplants: " .. availableStats.eggplants
+    charcoalAvailLabel.Text = "⚫ Charcoal: " .. availableStats.charcoal
+    appleCoreAvailLabel.Text = "🍎 Apple Cores: " .. availableStats.appleCores
+    chipAvailLabel.Text = "🍟 Chips: " .. availableStats.chips
+    wrapperAvailLabel.Text = "📄 Wrappers: " .. availableStats.wrappers
+    milkAvailLabel.Text = "🥛 Milk: " .. availableStats.milk
+    batteryAvailLabel.Text = "🔋 Batteries: " .. availableStats.batteries
     
     local totalAvail = availableStats.bottles + availableStats.eggplants + availableStats.charcoal + 
                        availableStats.appleCores + availableStats.chips + availableStats.wrappers + 
                        availableStats.milk + availableStats.batteries
-    totalAvailLabel.Text = "🗑 รวมขยะทั้งหมด: " .. totalAvail
+    totalAvailLabel.Text = "🗑 รวมทั้งหมด: " .. totalAvail
     
-    bottleLabel.Text = "🍾 Bottles เก็บ: " .. stats.bottles
-    eggplantLabel.Text = "🍆 Eggplants เก็บ: " .. stats.eggplants
-    charcoalLabel.Text = "⚫ Charcoal เก็บ: " .. stats.charcoal
-    appleCoreLabel.Text = "🍎 Apple Cores เก็บ: " .. stats.appleCores
-    chipLabel.Text = "🍟 Chips เก็บ: " .. stats.chips
-    wrapperLabel.Text = "📄 Wrappers เก็บ: " .. stats.wrappers
-    milkLabel.Text = "🥛 Milk เก็บ: " .. stats.milk
-    batteryLabel.Text = "🔋 Batteries เก็บ: " .. stats.batteries
+    bottleLabel.Text = "🍾 Bottles: " .. stats.bottles
+    eggplantLabel.Text = "🍆 Eggplants: " .. stats.eggplants
+    charcoalLabel.Text = "⚫ Charcoal: " .. stats.charcoal
+    appleCoreLabel.Text = "🍎 Apple Cores: " .. stats.appleCores
+    chipLabel.Text = "🍟 Chips: " .. stats.chips
+    wrapperLabel.Text = "📄 Wrappers: " .. stats.wrappers
+    milkLabel.Text = "🥛 Milk: " .. stats.milk
+    batteryLabel.Text = "🔋 Batteries: " .. stats.batteries
     
     local total = stats.bottles + stats.eggplants + stats.charcoal + stats.appleCores + 
                   stats.chips + stats.wrappers + stats.milk + stats.batteries
@@ -300,9 +514,19 @@ end
 
 local function findAllItems(itemName)
     local items = {}
-    for _, obj in pairs(workspace:GetDescendants()) do
-        if obj.Name == itemName and obj:FindFirstChild("Prompt") then
-            table.insert(items, obj)
+    if itemName == "AppleCore" then
+        local appleCore = workspace:FindFirstChild("AppleCore")
+        if appleCore then
+            local handle = appleCore:FindFirstChild("Handle")
+            if handle and handle:FindFirstChild("Prompt") then
+                table.insert(items, handle)
+            end
+        end
+    else
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj.Name == itemName and obj:FindFirstChild("Prompt") then
+                table.insert(items, obj)
+            end
         end
     end
     return items
@@ -314,291 +538,4 @@ local itemsConfig = {
     {name = "Eggplant", bin = "CompostBin", stat = "eggplants", emoji = "🍆"},
     {name = "AppleCore", bin = "CompostBin", stat = "appleCores", emoji = "🍎"},
     {name = "charcoal", bin = "HazardousBin", stat = "charcoal", emoji = "⚫"},
-    {name = "Battery", bin = "HazardousBin", stat = "batteries", emoji = "🔋"},
-    {name = "Chip", bin = "GeneralBin", stat = "chips", emoji = "🍟"},
-    {name = "Wrapper", bin = "GeneralBin", stat = "wrappers", emoji = "📄"}
-}
-
-local function updateAvailableItems()
-    while isRunning do
-        for _, config in ipairs(itemsConfig) do
-            local items = findAllItems(config.name)
-            availableStats[config.stat] = #items
-        end
-        updateStats()
-        wait(1)
-    end
-end
-
-local function goToPosition(targetPosition)
-    if USE_TELEPORT then
-        humanoidRootPart.CFrame = CFrame.new(targetPosition)
-        wait(0.1)
-    else
-        humanoid:MoveTo(targetPosition)
-        local timeOut = 10
-        local startTime = tick()
-        while (humanoidRootPart.Position - targetPosition).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
-            wait(0.1)
-        end
-    end
-end
-
-local function collectItem(item)
-    local prompt = item:FindFirstChild("Prompt")
-    if not prompt then return false end
-    
-    goToPosition(item.Position)
-    
-    if isPaused or not isRunning then return false end
-    
-    wait(0.2)
-    
-    for i = 1, 10 do
-        if not isRunning or isPaused then return false end
-        
-        if isHoldingItem() then
-            return true
-        end
-        
-        if prompt:IsA("ProximityPrompt") then
-            if fireproximityprompt then
-                fireproximityprompt(prompt)
-            end
-        elseif prompt:IsA("ClickDetector") then
-            if fireclickdetector then
-                fireclickdetector(prompt)
-            end
-        end
-        
-        wait(0.1)
-    end
-    
-    return isHoldingItem()
-end
-
-local function depositToBin(binName, useTeleport)
-    if not isHoldingItem() then return false end
-    
-    local bin = workspace:FindFirstChild(binName)
-    if not bin then return false end
-    
-    local depositPrompt = bin:FindFirstChild("DepositPrompt")
-    if not depositPrompt then return false end
-    
-    if useTeleport then
-        humanoidRootPart.CFrame = CFrame.new(bin.Position)
-        wait(0.2)
-    else
-        humanoid:MoveTo(bin.Position)
-        local timeOut = 10
-        local startTime = tick()
-        while (humanoidRootPart.Position - bin.Position).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
-            wait(0.1)
-        end
-        
-        if isPaused or not isRunning then return false end
-        
-        wait(0.2)
-    end
-    
-    for i = 1, 15 do
-        if not isRunning or isPaused then return false end
-        
-        if not isHoldingItem() then
-            return true
-        end
-        
-        if depositPrompt:IsA("ProximityPrompt") then
-            if fireproximityprompt then
-                fireproximityprompt(depositPrompt)
-            end
-        elseif depositPrompt:IsA("ClickDetector") then
-            if fireclickdetector then
-                fireclickdetector(depositPrompt)
-            end
-        end
-        
-        wait(0.15)
-    end
-    
-    return not isHoldingItem()
-end
-
-local function mainLoop()
-    while isRunning do
-        while isPaused do
-            wait(0.5)
-        end
-        
-        if not isRunning then break end
-        
-        local hasItems = false
-        
-        for _, config in ipairs(itemsConfig) do
-            if not isRunning then break end
-            
-            while isPaused do
-                wait(0.5)
-            end
-            
-            if not isRunning then break end
-            
-            local items = findAllItems(config.name)
-            
-            if #items > 0 then
-                hasItems = true
-                local item = items[1]
-                
-                updateStatus("🔄 กำลังเก็บ " .. config.emoji .. " " .. config.name .. "...")
-                
-                if collectItem(item) then
-                    if not isRunning or isPaused then break end
-                    
-                    updateStatus("📦 กำลังนำไปใส่ถัง...")
-                    
-                    if depositToBin(config.bin, USE_TELEPORT) then
-                        stats[config.stat] = stats[config.stat] + 1
-                        updateStats()
-                    end
-                end
-                
-                wait(0.1)
-            end
-        end
-        
-        if not hasItems then
-            updateStatus("⏳ รอขยะ spawn ใหม่...")
-            wait(3)
-        end
-    end
-end
-
-walkButton.MouseButton1Click:Connect(function()
-    USE_TELEPORT = false
-    menuFrame.Visible = false
-    statsFrame.Visible = true
-    isRunning = true
-    isPaused = false
-    updateStatus("🚶 กำลังเดินเก็บไอเทม...")
-    spawn(updateAvailableItems)
-    spawn(mainLoop)
-end)
-
-teleportButton.MouseButton1Click:Connect(function()
-    USE_TELEPORT = true
-    menuFrame.Visible = false
-    statsFrame.Visible = true
-    isRunning = true
-    isPaused = false
-    updateStatus("⚡ กำลังวาปเก็บไอเทม...")
-    spawn(updateAvailableItems)
-    spawn(mainLoop)
-end)
-
-toggleButton.MouseButton1Click:Connect(function()
-    isPaused = not isPaused
-    if isPaused then
-        humanoid:MoveTo(humanoidRootPart.Position)
-        toggleButton.Text = ">"
-        toggleButton.BackgroundColor3 = Color3.fromRGB(52, 152, 219)
-        updateStatus("⏸ หยุดชั่วคราว")
-    else
-        toggleButton.Text = "||"
-        toggleButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
-        updateStatus("▶ กำลังทำงาน...")
-    end
-end)
-
-closeButton.MouseButton1Click:Connect(function()
-    isRunning = false
-    isPaused = false
-    screenGui:Destroy()
-end)
-
-toggleUIButton.MouseButton1Click:Connect(function()
-    if menuFrame.Visible or statsFrame.Visible then
-        menuFrame.Visible = false
-        statsFrame.Visible = false
-        toggleUIButton.Text = "UI"
-    else
-        if isRunning then
-            statsFrame.Visible = true
-        else
-            menuFrame.Visible = true
-        end
-        toggleUIButton.Text = "X"
-    end
-end)
-
-local dragging
-local dragInput
-local dragStart
-local startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    statsFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-titleBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = statsFrame.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-titleBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
-    end
-end)
-
-local toggleDragging
-local toggleDragInput
-local toggleDragStart
-local toggleStartPos
-
-local function updateToggle(input)
-    local delta = input.Position - toggleDragStart
-    toggleUIButton.Position = UDim2.new(toggleStartPos.X.Scale, toggleStartPos.X.Offset + delta.X, toggleStartPos.Y.Scale, toggleStartPos.Y.Offset + delta.Y)
-end
-
-toggleUIButton.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        toggleDragging = true
-        toggleDragStart = input.Position
-        toggleStartPos = toggleUIButton.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                toggleDragging = false
-            end
-        end)
-    end
-end)
-
-toggleUIButton.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        toggleDragInput = input
-    end
-end)
-
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-    if input == toggleDragInput and toggleDragging then
-        updateToggle(input)
-    end
-end)
+    {name = "Battery", bin = "HazardousBin", stat = "batteries", emoji = "🔋

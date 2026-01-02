@@ -538,4 +538,495 @@ local itemsConfig = {
     {name = "Eggplant", bin = "CompostBin", stat = "eggplants", emoji = "🍆"},
     {name = "AppleCore", bin = "CompostBin", stat = "appleCores", emoji = "🍎"},
     {name = "charcoal", bin = "HazardousBin", stat = "charcoal", emoji = "⚫"},
-    {name = "Battery", bin = "HazardousBin", stat = "batteries", emoji = "🔋
+    {name = "Battery", bin = "HazardousBin", stat = "batteries", emoji = "🔋"},
+    {name = "Chip", bin = "GeneralBin", stat = "chips", emoji = "🍟"},
+    {name = "Wrapper", bin = "GeneralBin", stat = "wrappers", emoji = "📄"}
+}
+
+local function updateAvailableItems()
+    while isRunning or modeSelected do
+        for _, config in ipairs(itemsConfig) do
+            local items = findAllItems(config.name)
+            availableStats[config.stat] = #items
+        end
+        updateStats()
+        wait(1)
+    end
+end
+
+local function goToPosition(targetPosition)
+    if USE_TELEPORT then
+        humanoidRootPart.CFrame = CFrame.new(targetPosition)
+        wait(0.1)
+    else
+        humanoid:MoveTo(targetPosition)
+        local timeOut = 10
+        local startTime = tick()
+        while (humanoidRootPart.Position - targetPosition).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
+            wait(0.1)
+        end
+    end
+end
+
+local function collectItem(item)
+    local prompt = item:FindFirstChild("Prompt")
+    if not prompt then return false end
+    
+    goToPosition(item.Position)
+    
+    if isPaused or not isRunning then return false end
+    
+    wait(0.2)
+    
+    for i = 1, 10 do
+        if not isRunning or isPaused then return false end
+        
+        if isHoldingItem() then
+            return true
+        end
+        
+        if prompt:IsA("ProximityPrompt") then
+            if fireproximityprompt then
+                fireproximityprompt(prompt)
+            end
+        elseif prompt:IsA("ClickDetector") then
+            if fireclickdetector then
+                fireclickdetector(prompt)
+            end
+        end
+        
+        wait(0.1)
+    end
+    
+    return isHoldingItem()
+end
+
+local function depositToBin(binName, useTeleport)
+    if not isHoldingItem() then return false end
+    
+    local bin = workspace:FindFirstChild(binName)
+    if not bin then return false end
+    
+    local depositPrompt = bin:FindFirstChild("DepositPrompt")
+    if not depositPrompt then return false end
+    
+    if useTeleport then
+        humanoidRootPart.CFrame = CFrame.new(bin.Position)
+        wait(0.2)
+    else
+        humanoid:MoveTo(bin.Position)
+        local timeOut = 10
+        local startTime = tick()
+        while (humanoidRootPart.Position - bin.Position).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
+            wait(0.1)
+        end
+        
+        if isPaused or not isRunning then return false end
+        
+        wait(0.2)
+    end
+    
+    for i = 1, 15 do
+        if not isRunning or isPaused then return false end
+        
+        if not isHoldingItem() then
+            return true
+        end
+        
+        if depositPrompt:IsA("ProximityPrompt") then
+            if fireproximityprompt then
+                fireproximityprompt(depositPrompt)
+            end
+        elseif depositPrompt:IsA("ClickDetector") then
+            if fireclickdetector then
+                fireclickdetector(depositPrompt)
+            end
+        end
+        
+        wait(0.15)
+    end
+    
+    return not isHoldingItem()
+end
+
+local function mainLoop()
+    while isRunning do
+        while isPaused do
+            wait(0.5)
+        end
+        
+        if not isRunning then break end
+        
+        if currentHeldItem and currentTargetBin then
+            updateStatus("📦 กำลังนำไปใส่ถัง...")
+            
+            if depositToBin(currentTargetBin, USE_TELEPORT) then
+                stats[currentHeldItem.stat] = stats[currentHeldItem.stat] + 1
+                updateStats()
+                currentHeldItem = nil
+                currentTargetBin = nil
+            end
+            
+            wait(0.1)
+            continue
+        end
+        
+        local hasItems = false
+        
+        for _, config in ipairs(itemsConfig) do
+            if not isRunning then break end
+            
+            while isPaused do
+                wait(0.5)
+            end
+            
+            if not isRunning then break end
+            
+            local items = findAllItems(config.name)
+            
+            if #items > 0 then
+                hasItems = true
+                local item = items[1]
+                
+                updateStatus("🔄 กำลังเก็บ " .. config.emoji .. " " .. config.name .. "...")
+                
+                if collectItem(item) then
+                    currentHeldItem = config
+                    currentTargetBin = config.bin
+                    
+                    if not isRunning or isPaused then break end
+                    
+                    updateStatus("📦 กำลังนำไปใส่ถัง...")
+                    
+                    if depositToBin(config.bin, USE_TELEPORT) then
+                        stats[config.stat] = stats[config.stat] + 1
+                        updateStats()
+                        currentHeldItem = nil
+                        currentTargetBin = nil
+                    end
+                end
+                
+                wait(0.1)
+            end
+        end
+        
+        if not hasItems then
+            updateStatus("⏳ รอขยะ spawn ใหม่...")
+            wait(3)
+        end
+    end
+end
+
+local function createParticles(parent)
+    for i = 1, 20 do
+        local particle = Instance.new("Frame")
+        particle.Size = UDim2.new(0, math.random(4, 8), 0, math.random(4, 8))
+        particle.Position = UDim2.new(math.random(), 0, math.random(), 0)
+        particle.BackgroundColor3 = Color3.fromHSV(math.random(), 0.8, 1)
+        particle.BorderSizePixel = 0
+        particle.Parent = parent
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = particle
+        
+        spawn(function()
+            for j = 1, 30 do
+                particle.Position = particle.Position + UDim2.new(math.random(-10, 10)/100, 0, -0.05, 0)
+                particle.BackgroundTransparency = j / 30
+                wait(0.03)
+            end
+            particle:Destroy()
+        end)
+    end
+end
+
+local function animateButton(button, callback)
+    button.MouseButton1Click:Connect(function()
+        local originalSize = button.Size
+        local originalPos = button.Position
+        
+        button:TweenSizeAndPosition(
+            UDim2.new(originalSize.X.Scale * 0.95, originalSize.X.Offset * 0.95, originalSize.Y.Scale * 0.95, originalSize.Y.Offset * 0.95),
+            UDim2.new(originalPos.X.Scale, originalPos.X.Offset + (originalSize.X.Offset * 0.025), originalPos.Y.Scale, originalPos.Y.Offset + (originalSize.Y.Offset * 0.025)),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Quad,
+            0.1,
+            true,
+            function()
+                button:TweenSizeAndPosition(
+                    originalSize,
+                    originalPos,
+                    Enum.EasingDirection.Out,
+                    Enum.EasingStyle.Elastic,
+                    0.3,
+                    true
+                )
+            end
+        )
+        
+        callback()
+    end)
+end
+
+animateButton(walkButton, function()
+    USE_TELEPORT = false
+    modeSelected = true
+    
+    createParticles(menuFrame)
+    
+    menuFrame:TweenPosition(
+        UDim2.new(0.5, -210, 1.5, 0),
+        Enum.EasingDirection.In,
+        Enum.EasingStyle.Back,
+        0.5,
+        true,
+        function()
+            menuFrame.Visible = false
+            statsFrame.Visible = true
+            statsFrame.Position = UDim2.new(0.5, -280, -0.5, 0)
+            
+            for i = 0, 10 do
+                statsFrame.BackgroundTransparency = 1 - (i / 10)
+                wait(0.02)
+            end
+            
+            statsFrame:TweenPosition(
+                UDim2.new(0.5, -280, 0.5, -210),
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Back,
+                0.6,
+                true
+            )
+        end
+    )
+    
+    spawn(updateAvailableItems)
+end)
+
+animateButton(teleportButton, function()
+    USE_TELEPORT = true
+    modeSelected = true
+    
+    createParticles(menuFrame)
+    
+    menuFrame:TweenPosition(
+        UDim2.new(0.5, -210, 1.5, 0),
+        Enum.EasingDirection.In,
+        Enum.EasingStyle.Back,
+        0.5,
+        true,
+        function()
+            menuFrame.Visible = false
+            statsFrame.Visible = true
+            statsFrame.Position = UDim2.new(0.5, -280, -0.5, 0)
+            
+            for i = 0, 10 do
+                statsFrame.BackgroundTransparency = 1 - (i / 10)
+                wait(0.02)
+            end
+            
+            statsFrame:TweenPosition(
+                UDim2.new(0.5, -280, 0.5, -210),
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Back,
+                0.6,
+                true
+            )
+        end
+    )
+    
+    spawn(updateAvailableItems)
+end)
+
+startButton.MouseButton1Click:Connect(function()
+    local originalSize = startButton.Size
+    
+    startButton:TweenSize(
+        UDim2.new(originalSize.X.Scale * 0.95, 0, originalSize.Y.Scale * 0.95, 0),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.1,
+        true,
+        function()
+            startButton:TweenSize(
+                originalSize,
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Elastic,
+                0.3,
+                true
+            )
+        end
+    )
+    
+    startButton.Visible = false
+    toggleButton.Visible = true
+    
+    isRunning = true
+    isPaused = false
+    
+    if USE_TELEPORT then
+        updateStatus("⚡ กำลังวาปเก็บไอเทม...")
+    else
+        updateStatus("🚶 กำลังเดินเก็บไอเทม...")
+    end
+    
+    spawn(mainLoop)
+end)
+
+toggleButton.MouseButton1Click:Connect(function()
+    isPaused = not isPaused
+    if isPaused then
+        humanoid:MoveTo(humanoidRootPart.Position)
+        toggleIcon.Text = "▶"
+        toggleText.Text = "เล่นต่อ"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(52, 152, 219)
+        updateStatus("⏸ หยุดชั่วคราว")
+    else
+        toggleIcon.Text = "||"
+        toggleText.Text = "หยุดชั่วคราว"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+        updateStatus("▶ กำลังทำงาน...")
+    end
+end)
+
+closeButton.MouseButton1Click:Connect(function()
+    isRunning = false
+    isPaused = false
+    modeSelected = false
+    statsFrame:TweenPosition(
+        UDim2.new(0.5, -280, -1, 0),
+        Enum.EasingDirection.In,
+        Enum.EasingStyle.Back,
+        0.4,
+        true,
+        function()
+            screenGui:Destroy()
+        end
+    )
+end)
+
+toggleUIButton.MouseButton1Click:Connect(function()
+    if menuFrame.Visible or statsFrame.Visible then
+        if menuFrame.Visible then
+            menuFrame:TweenPosition(
+                UDim2.new(0.5, -210, 1.5, 0),
+                Enum.EasingDirection.In,
+                Enum.EasingStyle.Back,
+                0.3,
+                true,
+                function()
+                    menuFrame.Visible = false
+                end
+            )
+        end
+        if statsFrame.Visible then
+            statsFrame:TweenPosition(
+                UDim2.new(0.5, -280, -1, 0),
+                Enum.EasingDirection.In,
+                Enum.EasingStyle.Back,
+                0.3,
+                true,
+                function()
+                    statsFrame.Visible = false
+                end
+            )
+        end
+        toggleUIButton.Text = "🗑️"
+    else
+        if modeSelected then
+            statsFrame.Visible = true
+            statsFrame.Position = UDim2.new(0.5, -280, -0.5, 0)
+            statsFrame:TweenPosition(
+                UDim2.new(0.5, -280, 0.5, -210),
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Back,
+                0.4,
+                true
+            )
+        else
+            menuFrame.Visible = true
+            menuFrame.Position = UDim2.new(0.5, -210, 1.5, 0)
+            menuFrame:TweenPosition(
+                UDim2.new(0.5, -210, 0.5, -160),
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Back,
+                0.4,
+                true
+            )
+        end
+        toggleUIButton.Text = "X"
+    end
+end)
+
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    statsFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = statsFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+local toggleDragging
+local toggleDragInput
+local toggleDragStart
+local toggleStartPos
+
+local function updateToggle(input)
+    local delta = input.Position - toggleDragStart
+    toggleUIButton.Position = UDim2.new(toggleStartPos.X.Scale, toggleStartPos.X.Offset + delta.X, toggleStartPos.Y.Scale, toggleStartPos.Y.Offset + delta.Y)
+end
+
+toggleUIButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        toggleDragging = true
+        toggleDragStart = input.Position
+        toggleStartPos = toggleUIButton.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                toggleDragging = false
+            end
+        end)
+    end
+end)
+
+toggleUIButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        toggleDragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == toggleDragInput and toggleDragging then
+        updateToggle(input)
+    end
+end)

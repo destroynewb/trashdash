@@ -1,0 +1,604 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AutoCollectorUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local toggleUIButton = Instance.new("TextButton")
+toggleUIButton.Size = UDim2.new(0, 60, 0, 60)
+toggleUIButton.Position = UDim2.new(1, -70, 0, 10)
+toggleUIButton.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+toggleUIButton.BackgroundTransparency = 0.3
+toggleUIButton.BorderSizePixel = 0
+toggleUIButton.Text = "UI"
+toggleUIButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleUIButton.Font = Enum.Font.GothamBold
+toggleUIButton.TextSize = 20
+toggleUIButton.Parent = screenGui
+
+local toggleUICorner = Instance.new("UICorner")
+toggleUICorner.CornerRadius = UDim.new(0, 15)
+toggleUICorner.Parent = toggleUIButton
+
+local menuFrame = Instance.new("Frame")
+menuFrame.Size = UDim2.new(0, 320, 0, 220)
+menuFrame.Position = UDim2.new(0.5, -160, 0.5, -110)
+menuFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+menuFrame.BorderSizePixel = 0
+menuFrame.Parent = screenGui
+
+local menuCorner = Instance.new("UICorner")
+menuCorner.CornerRadius = UDim.new(0, 15)
+menuCorner.Parent = menuFrame
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, -30, 0, 45)
+titleLabel.Position = UDim2.new(0, 15, 0, 15)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "🎮 Auto Collector"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 20
+titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+titleLabel.Parent = menuFrame
+
+local walkButton = Instance.new("TextButton")
+walkButton.Size = UDim2.new(1, -30, 0, 55)
+walkButton.Position = UDim2.new(0, 15, 0, 75)
+walkButton.BackgroundColor3 = Color3.fromRGB(52, 152, 219)
+walkButton.BorderSizePixel = 0
+walkButton.Text = "🚶 เดินเก็บไอเทม"
+walkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+walkButton.Font = Enum.Font.GothamBold
+walkButton.TextSize = 16
+walkButton.Parent = menuFrame
+
+local walkCorner = Instance.new("UICorner")
+walkCorner.CornerRadius = UDim.new(0, 10)
+walkCorner.Parent = walkButton
+
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(1, -30, 0, 55)
+teleportButton.Position = UDim2.new(0, 15, 0, 145)
+teleportButton.BackgroundColor3 = Color3.fromRGB(155, 89, 182)
+teleportButton.BorderSizePixel = 0
+teleportButton.Text = "⚡ วาปเก็บไอเทม (เร็ว)"
+teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+teleportButton.Font = Enum.Font.GothamBold
+teleportButton.TextSize = 16
+teleportButton.Parent = menuFrame
+
+local teleportCorner = Instance.new("UICorner")
+teleportCorner.CornerRadius = UDim.new(0, 10)
+teleportCorner.Parent = teleportButton
+
+local statsFrame = Instance.new("Frame")
+statsFrame.Size = UDim2.new(0, 320, 0, 480)
+statsFrame.Position = UDim2.new(0.5, -160, 0.5, -240)
+statsFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+statsFrame.BorderSizePixel = 0
+statsFrame.Visible = false
+statsFrame.Parent = screenGui
+
+local statsCorner = Instance.new("UICorner")
+statsCorner.CornerRadius = UDim.new(0, 15)
+statsCorner.Parent = statsFrame
+
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1, 0, 0, 50)
+titleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+titleBar.BorderSizePixel = 0
+titleBar.Parent = statsFrame
+
+local titleBarCorner = Instance.new("UICorner")
+titleBarCorner.CornerRadius = UDim.new(0, 15)
+titleBarCorner.Parent = titleBar
+
+local statsTitle = Instance.new("TextLabel")
+statsTitle.Size = UDim2.new(1, -100, 1, 0)
+statsTitle.Position = UDim2.new(0, 15, 0, 0)
+statsTitle.BackgroundTransparency = 1
+statsTitle.Text = "📊 Auto Collector"
+statsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+statsTitle.Font = Enum.Font.GothamBold
+statsTitle.TextSize = 18
+statsTitle.TextXAlignment = Enum.TextXAlignment.Left
+statsTitle.Parent = titleBar
+
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 35, 0, 35)
+toggleButton.Position = UDim2.new(1, -80, 0.5, -17.5)
+toggleButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+toggleButton.BorderSizePixel = 0
+toggleButton.Text = "||"
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.Font = Enum.Font.GothamBold
+toggleButton.TextSize = 18
+toggleButton.Parent = titleBar
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 8)
+toggleCorner.Parent = toggleButton
+
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 35, 0, 35)
+closeButton.Position = UDim2.new(1, -40, 0.5, -17.5)
+closeButton.BackgroundColor3 = Color3.fromRGB(231, 76, 60)
+closeButton.BorderSizePixel = 0
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextSize = 20
+closeButton.Parent = titleBar
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeButton
+
+local statusLabel = Instance.new("TextLabel")
+statusLabel.Size = UDim2.new(1, -30, 0, 40)
+statusLabel.Position = UDim2.new(0, 15, 0, 60)
+statusLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+statusLabel.BorderSizePixel = 0
+statusLabel.Text = "🔄 กำลังเริ่มต้น..."
+statusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+statusLabel.Font = Enum.Font.Gotham
+statusLabel.TextSize = 13
+statusLabel.Parent = statsFrame
+
+local statusCorner = Instance.new("UICorner")
+statusCorner.CornerRadius = UDim.new(0, 8)
+statusCorner.Parent = statusLabel
+
+local statsContainer = Instance.new("ScrollingFrame")
+statsContainer.Size = UDim2.new(1, -30, 1, -115)
+statsContainer.Position = UDim2.new(0, 15, 0, 110)
+statsContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+statsContainer.BorderSizePixel = 0
+statsContainer.ScrollBarThickness = 6
+statsContainer.Parent = statsFrame
+
+local containerCorner = Instance.new("UICorner")
+containerCorner.CornerRadius = UDim.new(0, 8)
+containerCorner.Parent = statsContainer
+
+local listLayout = Instance.new("UIListLayout")
+listLayout.Padding = UDim.new(0, 8)
+listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+listLayout.Parent = statsContainer
+
+local availableHeader = Instance.new("TextLabel")
+availableHeader.Size = UDim2.new(1, -10, 0, 28)
+availableHeader.BackgroundTransparency = 1
+availableHeader.Text = "🔍 ขยะที่เจอในแมพ"
+availableHeader.TextColor3 = Color3.fromRGB(255, 200, 100)
+availableHeader.Font = Enum.Font.GothamBold
+availableHeader.TextSize = 14
+availableHeader.TextXAlignment = Enum.TextXAlignment.Left
+availableHeader.LayoutOrder = 0
+availableHeader.Parent = statsContainer
+
+local function createStatLabel(name, emoji, order)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -10, 0, 28)
+    label.BackgroundTransparency = 1
+    label.Text = emoji .. " " .. name .. ": 0"
+    label.TextColor3 = Color3.fromRGB(200, 200, 200)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 13
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.LayoutOrder = order
+    label.Parent = statsContainer
+    return label
+end
+
+local bottleAvailLabel = createStatLabel("Bottles พบ", "🍾", 1)
+local eggplantAvailLabel = createStatLabel("Eggplants พบ", "🍆", 2)
+local charcoalAvailLabel = createStatLabel("Charcoal พบ", "⚫", 3)
+local appleCoreAvailLabel = createStatLabel("Apple Cores พบ", "🍎", 4)
+local chipAvailLabel = createStatLabel("Chips พบ", "🍟", 5)
+local wrapperAvailLabel = createStatLabel("Wrappers พบ", "📄", 6)
+local milkAvailLabel = createStatLabel("Milk พบ", "🥛", 7)
+local batteryAvailLabel = createStatLabel("Batteries พบ", "🔋", 8)
+local totalAvailLabel = createStatLabel("รวมขยะทั้งหมด", "🗑", 9)
+totalAvailLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
+totalAvailLabel.Font = Enum.Font.GothamBold
+
+local collectedHeader = Instance.new("TextLabel")
+collectedHeader.Size = UDim2.new(1, -10, 0, 28)
+collectedHeader.BackgroundTransparency = 1
+collectedHeader.Text = "✅ ขยะที่เก็บแล้ว"
+collectedHeader.TextColor3 = Color3.fromRGB(100, 255, 150)
+collectedHeader.Font = Enum.Font.GothamBold
+collectedHeader.TextSize = 14
+collectedHeader.TextXAlignment = Enum.TextXAlignment.Left
+collectedHeader.LayoutOrder = 10
+collectedHeader.Parent = statsContainer
+
+local bottleLabel = createStatLabel("Bottles เก็บ", "🍾", 11)
+local eggplantLabel = createStatLabel("Eggplants เก็บ", "🍆", 12)
+local charcoalLabel = createStatLabel("Charcoal เก็บ", "⚫", 13)
+local appleCoreLabel = createStatLabel("Apple Cores เก็บ", "🍎", 14)
+local chipLabel = createStatLabel("Chips เก็บ", "🍟", 15)
+local wrapperLabel = createStatLabel("Wrappers เก็บ", "📄", 16)
+local milkLabel = createStatLabel("Milk เก็บ", "🥛", 17)
+local batteryLabel = createStatLabel("Batteries เก็บ", "🔋", 18)
+local totalLabel = createStatLabel("รวมที่เก็บ", "📦", 19)
+totalLabel.TextColor3 = Color3.fromRGB(46, 204, 113)
+totalLabel.Font = Enum.Font.GothamBold
+
+local stats = {
+    bottles = 0,
+    eggplants = 0,
+    charcoal = 0,
+    appleCores = 0,
+    chips = 0,
+    wrappers = 0,
+    milk = 0,
+    batteries = 0
+}
+
+local availableStats = {
+    bottles = 0,
+    eggplants = 0,
+    charcoal = 0,
+    appleCores = 0,
+    chips = 0,
+    wrappers = 0,
+    milk = 0,
+    batteries = 0
+}
+
+local isRunning = false
+local isPaused = false
+local USE_TELEPORT = false
+
+local function updateStats()
+    bottleAvailLabel.Text = "🍾 Bottles พบ: " .. availableStats.bottles
+    eggplantAvailLabel.Text = "🍆 Eggplants พบ: " .. availableStats.eggplants
+    charcoalAvailLabel.Text = "⚫ Charcoal พบ: " .. availableStats.charcoal
+    appleCoreAvailLabel.Text = "🍎 Apple Cores พบ: " .. availableStats.appleCores
+    chipAvailLabel.Text = "🍟 Chips พบ: " .. availableStats.chips
+    wrapperAvailLabel.Text = "📄 Wrappers พบ: " .. availableStats.wrappers
+    milkAvailLabel.Text = "🥛 Milk พบ: " .. availableStats.milk
+    batteryAvailLabel.Text = "🔋 Batteries พบ: " .. availableStats.batteries
+    
+    local totalAvail = availableStats.bottles + availableStats.eggplants + availableStats.charcoal + 
+                       availableStats.appleCores + availableStats.chips + availableStats.wrappers + 
+                       availableStats.milk + availableStats.batteries
+    totalAvailLabel.Text = "🗑 รวมขยะทั้งหมด: " .. totalAvail
+    
+    bottleLabel.Text = "🍾 Bottles เก็บ: " .. stats.bottles
+    eggplantLabel.Text = "🍆 Eggplants เก็บ: " .. stats.eggplants
+    charcoalLabel.Text = "⚫ Charcoal เก็บ: " .. stats.charcoal
+    appleCoreLabel.Text = "🍎 Apple Cores เก็บ: " .. stats.appleCores
+    chipLabel.Text = "🍟 Chips เก็บ: " .. stats.chips
+    wrapperLabel.Text = "📄 Wrappers เก็บ: " .. stats.wrappers
+    milkLabel.Text = "🥛 Milk เก็บ: " .. stats.milk
+    batteryLabel.Text = "🔋 Batteries เก็บ: " .. stats.batteries
+    
+    local total = stats.bottles + stats.eggplants + stats.charcoal + stats.appleCores + 
+                  stats.chips + stats.wrappers + stats.milk + stats.batteries
+    totalLabel.Text = "📦 รวมที่เก็บ: " .. total
+end
+
+local function updateStatus(text)
+    statusLabel.Text = text
+end
+
+local function isHoldingItem()
+    local success, result = pcall(function()
+        local heldItemDisplay = player.PlayerGui.GameHUD.HeldItemDisplay
+        return heldItemDisplay.Visible
+    end)
+    return success and result
+end
+
+local function findAllItems(itemName)
+    local items = {}
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj.Name == itemName and obj:FindFirstChild("Prompt") then
+            table.insert(items, obj)
+        end
+    end
+    return items
+end
+
+local itemsConfig = {
+    {name = "Bottle", bin = "RecyclingBin", stat = "bottles", emoji = "🍾"},
+    {name = "milk", bin = "RecyclingBin", stat = "milk", emoji = "🥛"},
+    {name = "Eggplant", bin = "CompostBin", stat = "eggplants", emoji = "🍆"},
+    {name = "AppleCore", bin = "CompostBin", stat = "appleCores", emoji = "🍎"},
+    {name = "charcoal", bin = "HazardousBin", stat = "charcoal", emoji = "⚫"},
+    {name = "Battery", bin = "HazardousBin", stat = "batteries", emoji = "🔋"},
+    {name = "Chip", bin = "GeneralBin", stat = "chips", emoji = "🍟"},
+    {name = "Wrapper", bin = "GeneralBin", stat = "wrappers", emoji = "📄"}
+}
+
+local function updateAvailableItems()
+    while isRunning do
+        for _, config in ipairs(itemsConfig) do
+            local items = findAllItems(config.name)
+            availableStats[config.stat] = #items
+        end
+        updateStats()
+        wait(1)
+    end
+end
+
+local function goToPosition(targetPosition)
+    if USE_TELEPORT then
+        humanoidRootPart.CFrame = CFrame.new(targetPosition)
+        wait(0.1)
+    else
+        humanoid:MoveTo(targetPosition)
+        local timeOut = 10
+        local startTime = tick()
+        while (humanoidRootPart.Position - targetPosition).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
+            wait(0.1)
+        end
+    end
+end
+
+local function collectItem(item)
+    local prompt = item:FindFirstChild("Prompt")
+    if not prompt then return false end
+    
+    goToPosition(item.Position)
+    
+    if isPaused or not isRunning then return false end
+    
+    wait(0.2)
+    
+    for i = 1, 10 do
+        if not isRunning or isPaused then return false end
+        
+        if isHoldingItem() then
+            return true
+        end
+        
+        if prompt:IsA("ProximityPrompt") then
+            if fireproximityprompt then
+                fireproximityprompt(prompt)
+            end
+        elseif prompt:IsA("ClickDetector") then
+            if fireclickdetector then
+                fireclickdetector(prompt)
+            end
+        end
+        
+        wait(0.1)
+    end
+    
+    return isHoldingItem()
+end
+
+local function depositToBin(binName, useTeleport)
+    if not isHoldingItem() then return false end
+    
+    local bin = workspace:FindFirstChild(binName)
+    if not bin then return false end
+    
+    local depositPrompt = bin:FindFirstChild("DepositPrompt")
+    if not depositPrompt then return false end
+    
+    if useTeleport then
+        humanoidRootPart.CFrame = CFrame.new(bin.Position)
+        wait(0.2)
+    else
+        humanoid:MoveTo(bin.Position)
+        local timeOut = 10
+        local startTime = tick()
+        while (humanoidRootPart.Position - bin.Position).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
+            wait(0.1)
+        end
+        
+        if isPaused or not isRunning then return false end
+        
+        wait(0.2)
+    end
+    
+    for i = 1, 15 do
+        if not isRunning or isPaused then return false end
+        
+        if not isHoldingItem() then
+            return true
+        end
+        
+        if depositPrompt:IsA("ProximityPrompt") then
+            if fireproximityprompt then
+                fireproximityprompt(depositPrompt)
+            end
+        elseif depositPrompt:IsA("ClickDetector") then
+            if fireclickdetector then
+                fireclickdetector(depositPrompt)
+            end
+        end
+        
+        wait(0.15)
+    end
+    
+    return not isHoldingItem()
+end
+
+local function mainLoop()
+    while isRunning do
+        while isPaused do
+            wait(0.5)
+        end
+        
+        if not isRunning then break end
+        
+        local hasItems = false
+        
+        for _, config in ipairs(itemsConfig) do
+            if not isRunning then break end
+            
+            while isPaused do
+                wait(0.5)
+            end
+            
+            if not isRunning then break end
+            
+            local items = findAllItems(config.name)
+            
+            if #items > 0 then
+                hasItems = true
+                local item = items[1]
+                
+                updateStatus("🔄 กำลังเก็บ " .. config.emoji .. " " .. config.name .. "...")
+                
+                if collectItem(item) then
+                    if not isRunning or isPaused then break end
+                    
+                    updateStatus("📦 กำลังนำไปใส่ถัง...")
+                    
+                    if depositToBin(config.bin, USE_TELEPORT) then
+                        stats[config.stat] = stats[config.stat] + 1
+                        updateStats()
+                    end
+                end
+                
+                wait(0.1)
+            end
+        end
+        
+        if not hasItems then
+            updateStatus("⏳ รอขยะ spawn ใหม่...")
+            wait(3)
+        end
+    end
+end
+
+walkButton.MouseButton1Click:Connect(function()
+    USE_TELEPORT = false
+    menuFrame.Visible = false
+    statsFrame.Visible = true
+    isRunning = true
+    isPaused = false
+    updateStatus("🚶 กำลังเดินเก็บไอเทม...")
+    spawn(updateAvailableItems)
+    spawn(mainLoop)
+end)
+
+teleportButton.MouseButton1Click:Connect(function()
+    USE_TELEPORT = true
+    menuFrame.Visible = false
+    statsFrame.Visible = true
+    isRunning = true
+    isPaused = false
+    updateStatus("⚡ กำลังวาปเก็บไอเทม...")
+    spawn(updateAvailableItems)
+    spawn(mainLoop)
+end)
+
+toggleButton.MouseButton1Click:Connect(function()
+    isPaused = not isPaused
+    if isPaused then
+        humanoid:MoveTo(humanoidRootPart.Position)
+        toggleButton.Text = ">"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(52, 152, 219)
+        updateStatus("⏸ หยุดชั่วคราว")
+    else
+        toggleButton.Text = "||"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+        updateStatus("▶ กำลังทำงาน...")
+    end
+end)
+
+closeButton.MouseButton1Click:Connect(function()
+    isRunning = false
+    isPaused = false
+    screenGui:Destroy()
+end)
+
+toggleUIButton.MouseButton1Click:Connect(function()
+    if menuFrame.Visible or statsFrame.Visible then
+        menuFrame.Visible = false
+        statsFrame.Visible = false
+        toggleUIButton.Text = "UI"
+    else
+        if isRunning then
+            statsFrame.Visible = true
+        else
+            menuFrame.Visible = true
+        end
+        toggleUIButton.Text = "X"
+    end
+end)
+
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    statsFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = statsFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+local toggleDragging
+local toggleDragInput
+local toggleDragStart
+local toggleStartPos
+
+local function updateToggle(input)
+    local delta = input.Position - toggleDragStart
+    toggleUIButton.Position = UDim2.new(toggleStartPos.X.Scale, toggleStartPos.X.Offset + delta.X, toggleStartPos.Y.Scale, toggleStartPos.Y.Offset + delta.Y)
+end
+
+toggleUIButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        toggleDragging = true
+        toggleDragStart = input.Position
+        toggleStartPos = toggleUIButton.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                toggleDragging = false
+            end
+        end)
+    end
+end)
+
+toggleUIButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        toggleDragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == toggleDragInput and toggleDragging then
+        updateToggle(input)
+    end
+end)

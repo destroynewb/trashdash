@@ -554,48 +554,56 @@ local function updateAvailableItems()
     end
 end
 
-local function goToPosition(targetPosition)
+local function goToPosition(targetPosition, yOffset)
+    yOffset = yOffset or 0
     if USE_TELEPORT then
-        humanoidRootPart.CFrame = CFrame.new(targetPosition)
-        wait(0.1)
+        local teleportPos = Vector3.new(targetPosition.X, targetPosition.Y + yOffset, targetPosition.Z)
+        humanoidRootPart.CFrame = CFrame.new(teleportPos)
+        wait(0.05)
     else
         humanoid:MoveTo(targetPosition)
         local timeOut = 10
         local startTime = tick()
         while (humanoidRootPart.Position - targetPosition).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
-            wait(0.1)
+            wait(0.05)
         end
     end
 end
 
-local function collectItem(item)
+local function collectItem(item, itemName)
     local prompt = item:FindFirstChild("Prompt")
     if not prompt then return false end
     
-    goToPosition(item.Position)
+    local yOffset = 0
+    if itemName == "Chip" or itemName == "Wrapper" then
+        yOffset = 2
+    end
+    
+    goToPosition(item.Position, yOffset)
     
     if isPaused or not isRunning then return false end
     
-    wait(0.2)
-    
-    for i = 1, 10 do
+    for i = 1, 30 do
         if not isRunning or isPaused then return false end
         
         if isHoldingItem() then
             return true
         end
         
-        if prompt:IsA("ProximityPrompt") then
-            if fireproximityprompt then
-                fireproximityprompt(prompt)
-            end
-        elseif prompt:IsA("ClickDetector") then
-            if fireclickdetector then
-                fireclickdetector(prompt)
+        local distance = (humanoidRootPart.Position - item.Position).Magnitude
+        if distance <= 5 then
+            if prompt:IsA("ProximityPrompt") then
+                if fireproximityprompt then
+                    fireproximityprompt(prompt)
+                end
+            elseif prompt:IsA("ClickDetector") then
+                if fireclickdetector then
+                    fireclickdetector(prompt)
+                end
             end
         end
         
-        wait(0.1)
+        wait(0.03)
     end
     
     return isHoldingItem()
@@ -612,38 +620,39 @@ local function depositToBin(binName, useTeleport)
     
     if useTeleport then
         humanoidRootPart.CFrame = CFrame.new(bin.Position)
-        wait(0.2)
+        wait(0.05)
     else
         humanoid:MoveTo(bin.Position)
         local timeOut = 10
         local startTime = tick()
         while (humanoidRootPart.Position - bin.Position).Magnitude > 5 and (tick() - startTime) < timeOut and isRunning and not isPaused do
-            wait(0.1)
+            wait(0.05)
         end
         
         if isPaused or not isRunning then return false end
-        
-        wait(0.2)
     end
     
-    for i = 1, 15 do
+    for i = 1, 40 do
         if not isRunning or isPaused then return false end
         
         if not isHoldingItem() then
             return true
         end
         
-        if depositPrompt:IsA("ProximityPrompt") then
-            if fireproximityprompt then
-                fireproximityprompt(depositPrompt)
-            end
-        elseif depositPrompt:IsA("ClickDetector") then
-            if fireclickdetector then
-                fireclickdetector(depositPrompt)
+        local distance = (humanoidRootPart.Position - bin.Position).Magnitude
+        if distance <= 5 then
+            if depositPrompt:IsA("ProximityPrompt") then
+                if fireproximityprompt then
+                    fireproximityprompt(depositPrompt)
+                end
+            elseif depositPrompt:IsA("ClickDetector") then
+                if fireclickdetector then
+                    fireclickdetector(depositPrompt)
+                end
             end
         end
         
-        wait(0.15)
+        wait(0.03)
     end
     
     return not isHoldingItem()
@@ -690,7 +699,7 @@ local function mainLoop()
                 
                 updateStatus("🔄 กำลังเก็บ " .. config.emoji .. " " .. config.name .. "...")
                 
-                if collectItem(item) then
+                if collectItem(item, config.name) then
                     currentHeldItem = config
                     currentTargetBin = config.bin
                     
